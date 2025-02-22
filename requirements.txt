@@ -1,0 +1,4 @@
+wxPython
+pymysql
+pymongo
+dnspython
