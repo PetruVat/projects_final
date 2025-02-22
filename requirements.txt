@@ -1,4 +1,4 @@
 wxPython
 pymysql
 pymongo
-dnspython
+python-dotenv

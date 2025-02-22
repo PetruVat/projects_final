@@ -10,6 +10,10 @@
 
 ## Требования
 Для работы проекта требуется установка следующих зависимостей:
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
 ```bash
 pip install -r requirements.txt
@@ -18,7 +22,8 @@ pip install -r requirements.txt
 Файл `requirements.txt` включает:
 - `wxPython` — для графического интерфейса.
 - `pymysql` — для работы с MySQL.
-- `pymongo` и `dnspython` — для взаимодействия с MongoDB.
+- `pymongo`  — для взаимодействия с MongoDB.
+- `python-dotenv` — загружает переменные окружения из .env.
 
 ## Настройка
 ### 1. Конфигурация базы данных
@@ -46,15 +51,22 @@ python main.py
 ## Структура проекта
 ```
 .
-├── main.py            # Главный файл запуска GUI
-├── display.py         # Интерфейс приложения (wxPython)
-├── command_handler.py # Обработчик команд
-├── db_handler.py      # Работа с MySQL и MongoDB
-├── connection.py      # Установление соединений с БД
-├── config.py          # Конфигурация окружения
-├── requirements.txt   # Зависимости проекта
-├── .gitignore         # Игнорируемые файлы
-└── .env               # Конфигурация базы данных (не хранить в репозитории)
+├── data_base/
+│   ├── __init__.py
+│   ├── config.py          # Конфигурация окружения
+│   ├── connection.py      # Установление соединений с БД
+│   └── db_handler.py      # Работа с MySQL и MongoDB
+├── GUI/
+│   ├── __init__.py
+│   └── display.py         # Интерфейс приложения (wxPython)
+├── services/
+│   ├── __init__.py
+│   └── command_handler.py # Обработчик команд
+├── .gitignore             # Игнорируемые файлы
+├── .env                   # Конфигурация базы данных (не хранить в репозитории)
+├── main.py                # Главный файл запуска GUI
+├── Readme.md              # Документация
+└── requirements.txt       # Зависимости проекта
 ```
 
 ## Основные файлы
