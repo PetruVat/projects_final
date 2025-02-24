@@ -173,7 +173,7 @@ class Application(wx.Frame):
                 output += f"Год выпуска: {release_year}\n"
                 if genre:
                     output += f"Жанр: {genre}\n"
-                output += "-" * 40 + "\n"
+                output += "-" * 100 + "\n"
             self.result_box.SetValue(output)
         else:
             self.result_box.SetValue("Фильмы не найдены.")
