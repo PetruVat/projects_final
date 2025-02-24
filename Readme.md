@@ -29,6 +29,7 @@ pip install -r requirements.txt
 ### 1. Конфигурация базы данных
 Перед запуском создайте файл `.env` в корневой директории проекта и укажите параметры подключения:
 
+Создайте свою локальную Базу Данных в MongoDB и измените названия базы данных
 ```env
 HOST=your-mysql-host
 USER=your-mysql-user
@@ -37,8 +38,8 @@ DATABASE=sakila
 
 MONGO_HOST=localhost
 MONGO_PORT=27017
-MONGO_DB=search_queries_db
-MONGO_COLLECTION=queries
+MONGO_DB=search_queries_db  # Измените на свои данные
+MONGO_COLLECTION=queries    # Измените на свои данные
 ```
 
 ### 2. Запуск приложения

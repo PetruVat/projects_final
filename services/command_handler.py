@@ -5,10 +5,12 @@ class CommandHandler:
     def __init__(self):
         self.db = DBHandler()
 
-    def search_keyword(self, keyword):
+    def search_keyword_no_save(self, keyword):
         results = self.db.search_by_keyword(keyword)
-        self.db.save_search_query(keyword, "search_keyword")
         return results
+
+    def save_query_only(self, query_text, query_type):
+        self.db.save_search_query(query_text, query_type)
 
     def search_genre_year(self, genre, year):
         results = self.db.search_by_genre_year(genre, year)
@@ -33,6 +35,12 @@ class CommandHandler:
 
     def get_genres(self):
         return self.db.get_genres()
+
+    def get_top_keywords(self):
+        return self.db.get_top_keywords_mongo()
+
+    def get_top_genres_year(self):
+        return self.db.get_top_genres_years_mongo()
 
     def close(self):
         self.db.close_connection()

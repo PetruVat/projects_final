@@ -2,6 +2,7 @@ import wx
 from GUI.display import Application
 
 
+
 def main():
     app = wx.App()
     Application()

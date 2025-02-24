@@ -6,22 +6,28 @@ class Application(wx.Frame):
         super().__init__(None, title="Film Search (Sakila)", size=(900, 650))
         self.cmd_handler = CommandHandler()
 
+        # --- Настраиваем "debounce" таймер на 1 секунду ---
+        self.search_delay_ms = 800  #  милисекунд
+        self.search_timer = wx.Timer(self)
+        # Привязка события EVT_TIMER к вашему методу
+        self.Bind(wx.EVT_TIMER, self.on_search_timer, self.search_timer)
 
-        self.SetBackgroundColour("#FFFFFF")
+        # Создается основной вертикальный сайзер (main_sizer), который будет использоваться для размещения элементов интерфейса.
+        self.SetBackgroundColour("#FFFFFF")             # (белый фон)
         panel = wx.Panel(self)
         panel.SetBackgroundColour("#FFFFFF")
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-
+        # Создается верхняя панель с серым фоном и горизонтальным сайзером (top_sizer).
         top_panel = wx.Panel(panel)
-        top_panel.SetBackgroundColour("#F3F3F3")
+        top_panel.SetBackgroundColour("#F3F3F3")        # (Серый фон)
         top_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-
+        # Определяются шрифты для заголовков и меток.
         font_header = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, faceName="Segoe UI")
         font_label = wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, faceName="Segoe UI")
 
-
+        # Поле для ввода названия фильма
         name_sizer = wx.BoxSizer(wx.VERTICAL)
         name_label = wx.StaticText(top_panel, label="🔎 Поиск по названию")
         name_label.SetFont(font_label)
@@ -89,6 +95,7 @@ class Application(wx.Frame):
         self.genre_choice.Bind(wx.EVT_CHOICE, self.on_update_search)
         self.top_button.Bind(wx.EVT_BUTTON, self.on_top_queries)
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.name_input.Bind(wx.EVT_TEXT, self.on_update_search)
 
         self.Show()
 
@@ -107,7 +114,7 @@ class Application(wx.Frame):
         genre_val = self.genre_choice.GetStringSelection() if genre_index != wx.NOT_FOUND else ""
 
         if keyword:
-            results = self.cmd_handler.search_keyword(keyword)
+            results = self.cmd_handler.search_keyword_no_save(keyword)
             self.display_films(results)
         elif year_val and genre_val:
             results = self.cmd_handler.search_genre_year(genre_val, year_val)
@@ -121,12 +128,35 @@ class Application(wx.Frame):
         else:
             self.result_box.SetValue("")
 
+        if self.search_timer.IsRunning():
+            self.search_timer.Stop()
+        self.search_timer.Start(self.search_delay_ms, oneShot=True)
+
+    def on_search_timer(self, event):
+        keyword = self.name_input.GetValue().strip()
+        if keyword:
+            self.cmd_handler.save_query_only(keyword, "search_keyword")
+
     def on_top_queries(self, event):
-        """Отображение популярных запросов."""
-        popular_queries = self.cmd_handler.get_popular_queries()
-        display_text = "Популярные запросы:\n\n"
-        for query in popular_queries:
-            display_text += f"{query['_id']} — {query['count']} раз\n"
+        """
+        Отображение двух рейтингов (MongoDB):
+        1) Топ-3 поиска по ключевым словам
+        2) Топ-3 поиска по жанру и году
+        """
+        top_keywords = self.cmd_handler.get_top_keywords()  # Это список документов [{'_id': ..., 'count': ...}, ...]
+        top_genre_year = self.cmd_handler.get_top_genres_year()  # Аналогично
+
+        display_text = "🔥 Топ-3 поиска по ключевым словам:\n\n"
+        for i, doc in enumerate(top_keywords, start=1):
+            # doc['_id'] будет строкой, в которой хранится само ключевое слово
+            # doc['count'] — сколько раз оно встречалось
+            display_text += f"{i}. {doc['_id']} — {doc['count']} раз\n"
+
+        display_text += "\n🔥 Топ-3 поиска по жанру и году:\n\n"
+        for i, doc in enumerate(top_genre_year, start=1):
+            # doc['_id'] будет строкой, в которой хранится "Comedy, 2006" или "Action, 2010"
+            display_text += f"{i}. {doc['_id']} — {doc['count']} раз\n"
+
         self.result_box.SetValue(display_text)
 
     def display_films(self, films):
