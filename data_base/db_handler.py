@@ -120,7 +120,7 @@ class DBHandler:
             print("Ошибка получения жанров:", e)
             return []
 
-    # ========= Сохранение в MongoDB =========
+    # ========= Сохранение в MongoDB =================================================================================
     def save_search_query(self, query_text, query_type):
         if self.mongo_collection is None:
             return
