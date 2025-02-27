@@ -7,7 +7,7 @@ class Application(wx.Frame):
         self.cmd_handler = CommandHandler()
 
         # --- Настраиваем "debounce" таймер на 1 секунду ---
-        self.search_delay_ms = 800  #  милисекунд
+        self.search_delay_ms = 800  #  милисекунды
         self.search_timer = wx.Timer(self)
         # Привязка события EVT_TIMER к вашему методу
         self.Bind(wx.EVT_TIMER, self.on_search_timer, self.search_timer)
@@ -143,18 +143,15 @@ class Application(wx.Frame):
         1) Топ-3 поиска по ключевым словам
         2) Топ-3 поиска по жанру и году
         """
-        top_keywords = self.cmd_handler.get_top_keywords()  # Это список документов [{'_id': ..., 'count': ...}, ...]
-        top_genre_year = self.cmd_handler.get_top_genres_year()  # Аналогично
+        top_keywords = self.cmd_handler.get_top_keywords()
+        top_genre_year = self.cmd_handler.get_top_genres_year()
 
         display_text = "🔥 Топ-3 поиска по ключевым словам:\n\n"
         for i, doc in enumerate(top_keywords, start=1):
-            # doc['_id'] будет строкой, в которой хранится само ключевое слово
-            # doc['count'] — сколько раз оно встречалось
             display_text += f"{i}. {doc['_id']} — {doc['count']} раз\n"
 
         display_text += "\n🔥 Топ-3 поиска по жанру и году:\n\n"
         for i, doc in enumerate(top_genre_year, start=1):
-            # doc['_id'] будет строкой, в которой хранится "Comedy, 2006" или "Action, 2010"
             display_text += f"{i}. {doc['_id']} — {doc['count']} раз\n"
 
         self.result_box.SetValue(display_text)

@@ -1,5 +1,6 @@
 import os
 import dotenv
+import pymysql
 from pymysql.cursors import DictCursor
 
 
@@ -11,7 +12,7 @@ MYSQL_CONFIG = {
     'password': os.getenv('PASSWORD'),
     'db': os.getenv('DATABASE'),
     'charset': 'utf8mb4',
-    'cursorclass': DictCursor
+    'cursorclass': pymysql.cursors.DictCursor
 }
 
 MONGO_CONFIG = {
