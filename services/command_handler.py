@@ -34,10 +34,6 @@ class CommandHandler:
         self.db.save_search_query(genre, "search_genre")
         return results
 
-    def get_popular_queries(self):
-        """Получение популярных запросов из базы данных."""
-        return self.db.get_popular_queries()
-
     def get_years(self):
         """Получение списка доступных лет выпуска фильмов."""
         return self.db.get_years()

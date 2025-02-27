@@ -143,21 +143,6 @@ class DBHandler:
         except Exception as e:
             print("Ошибка сохранения запроса:", e)
 
-    def get_popular_queries(self):
-        """Получение популярных поисковых запросов из MongoDB."""
-        if self.mongo_collection is None:
-            return []
-        try:
-            pipeline = [
-                {"$group": {"_id": "$query_text", "count": {"$sum": 1}}},
-                {"$sort": {"count": -1}},
-                {"$limit": 10},
-            ]
-            return list(self.mongo_collection.aggregate(pipeline))
-        except Exception as e:
-            print("Ошибка получения популярных запросов:", e)
-            return []
-
     def get_top_keywords_mongo(self, limit=10):
         """Получение топ-10 самых популярных запросов по названию или описанию из MongoDB."""
         if self.mongo_collection is None:
