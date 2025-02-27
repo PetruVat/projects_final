@@ -39,7 +39,7 @@ class Application(wx.Frame):
 
 
         year_sizer = wx.BoxSizer(wx.VERTICAL)
-        year_label = wx.StaticText(top_panel, label="📅 Выберите Год")
+        year_label = wx.StaticText(top_panel, label="📅 Год")
         year_label.SetFont(font_label)
         years = [""] + self.cmd_handler.get_years()
         self.year_choice = wx.Choice(top_panel, choices=years)

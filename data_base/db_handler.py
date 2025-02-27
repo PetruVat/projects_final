@@ -181,5 +181,8 @@ class DBHandler:
     def close_connection(self):
         if self.mysql_conn:
             self.mysql_conn.close()
+            print("Подключение MySQL закрыто.")
         if self.mongo_client:
             self.mongo_client.close()
+            print("Подключение Mongo закрыто.")
+            print("До скорой встрече!")
