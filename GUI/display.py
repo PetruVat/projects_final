@@ -6,8 +6,8 @@ class Application(wx.Frame):
         super().__init__(None, title="Film Search (Sakila)", size=(900, 650))
         self.cmd_handler = CommandHandler()
 
-        # --- Настраиваем "debounce" таймер на 1 секунду ---
-        self.search_delay_ms = 1000  #  секунда
+        # --- Настраиваем "debounce" таймер на 1.5 секунд ---
+        self.search_delay_ms = 1500  #  секунд
         self.search_timer = wx.Timer(self)
         # Привязка события EVT_TIMER к методу
         self.Bind(wx.EVT_TIMER, self.on_search_timer, self.search_timer)
