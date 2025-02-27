@@ -7,9 +7,9 @@ class Application(wx.Frame):
         self.cmd_handler = CommandHandler()
 
         # --- Настраиваем "debounce" таймер на 1 секунду ---
-        self.search_delay_ms = 800  #  милисекунды
+        self.search_delay_ms = 1000  #  секунда
         self.search_timer = wx.Timer(self)
-        # Привязка события EVT_TIMER к вашему методу
+        # Привязка события EVT_TIMER к методу
         self.Bind(wx.EVT_TIMER, self.on_search_timer, self.search_timer)
 
         # Создается основной вертикальный сайзер (main_sizer), который будет использоваться для размещения элементов интерфейса.
@@ -18,7 +18,7 @@ class Application(wx.Frame):
         panel.SetBackgroundColour("#FFFFFF")
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # Создается верхняя панель с серым фоном и горизонтальным сайзером (top_sizer).
+        # Создается верхняя панель с горизонтальным сайзером (top_sizer).
         top_panel = wx.Panel(panel)
         top_panel.SetBackgroundColour("#F3F3F3")        # (Серый фон)
         top_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -37,7 +37,7 @@ class Application(wx.Frame):
         name_sizer.Add(name_label, 0, wx.ALL, 5)
         name_sizer.Add(self.name_input, 0, wx.ALL | wx.EXPAND, 5)
 
-
+        # Поле для выбора Года
         year_sizer = wx.BoxSizer(wx.VERTICAL)
         year_label = wx.StaticText(top_panel, label="📅 Год")
         year_label.SetFont(font_label)
@@ -47,7 +47,7 @@ class Application(wx.Frame):
         year_sizer.Add(year_label, 0, wx.ALL, 5)
         year_sizer.Add(self.year_choice, 0, wx.ALL | wx.EXPAND, 5)
 
-
+        # Поле для выбора Жанра
         genre_sizer = wx.BoxSizer(wx.VERTICAL)
         genre_label = wx.StaticText(top_panel, label="🎭 Жанр")
         genre_label.SetFont(font_label)
@@ -57,21 +57,21 @@ class Application(wx.Frame):
         genre_sizer.Add(genre_label, 0, wx.ALL, 5)
         genre_sizer.Add(self.genre_choice, 0, wx.ALL | wx.EXPAND, 5)
 
-
+        # Кнопка Топ запросы
         self.top_button = wx.Button(top_panel, label="🔥 Топ запросы", size=(120, 35))
         self.top_button.SetBackgroundColour("#0078D7")
         self.top_button.SetForegroundColour("#FFFFFF")
         self.top_button.SetFont(font_label)
         self.top_button.SetWindowStyleFlag(wx.BORDER_NONE)
 
-
+        # Размещение элементов в верхней панели
         top_sizer.Add(name_sizer, 1, wx.ALL | wx.EXPAND, 10)
         top_sizer.Add(year_sizer, 1, wx.ALL | wx.EXPAND, 10)
         top_sizer.Add(genre_sizer, 1, wx.ALL | wx.EXPAND, 10)
         top_sizer.Add(self.top_button, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 20)
         top_panel.SetSizer(top_sizer)
 
-
+        # Панель результатов поиска
         result_panel = wx.Panel(panel)
         result_panel.SetBackgroundColour("#FFFFFF")
         result_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -84,12 +84,12 @@ class Application(wx.Frame):
         result_sizer.Add(self.result_box, 1, wx.ALL | wx.EXPAND, 5)
         result_panel.SetSizer(result_sizer)
 
-
+        # Размещение панелей в основном контейнере
         main_sizer.Add(top_panel, 0, wx.EXPAND | wx.ALL, 15)
         main_sizer.Add(result_panel, 1, wx.EXPAND | wx.ALL, 15)
         panel.SetSizer(main_sizer)
 
-
+        # Привязка обработчиков событий
         self.name_input.Bind(wx.EVT_TEXT, self.on_update_search)
         self.year_choice.Bind(wx.EVT_CHOICE, self.on_update_search)
         self.genre_choice.Bind(wx.EVT_CHOICE, self.on_update_search)
@@ -133,6 +133,7 @@ class Application(wx.Frame):
         self.search_timer.Start(self.search_delay_ms, oneShot=True)
 
     def on_search_timer(self, event):
+        """Сохранение поискового запроса после задержки"""
         keyword = self.name_input.GetValue().strip()
         if keyword:
             self.cmd_handler.save_query_only(keyword, "search_keyword")
@@ -157,6 +158,7 @@ class Application(wx.Frame):
         self.result_box.SetValue(display_text)
 
     def display_films(self, films):
+        """Отображение списка найденных фильмов"""
         self.result_box.Clear()
         if films:
             output = "Найденные фильмы:\n\n"
@@ -176,6 +178,7 @@ class Application(wx.Frame):
             self.result_box.SetValue("Фильмы не найдены.")
 
     def on_close(self, event):
+        """Отображение списка найденных фильмов"""
         self.cmd_handler.close()
         self.Destroy()
 

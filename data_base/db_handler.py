@@ -4,7 +4,9 @@ from data_base.connection import get_mysql_connection, get_mongo_connection
 
 
 class DBHandler:
+    """Класс для работы с базами данных MySQL и MongoDB."""
     def __init__(self):
+        """Инициализация соединений с MySQL и MongoDB."""
         try:
             self.mysql_conn = get_mysql_connection()
             self.mysql_cursor = self.mysql_conn.cursor()
@@ -21,6 +23,7 @@ class DBHandler:
             self.mongo_client = None
 
     def search_by_keyword(self, keyword):
+        """Поиск фильмов по ключевому слову в названии или описании."""
         query = """
             select f.title, f.description, f.release_year, c.name as genre
             from film f
@@ -40,6 +43,7 @@ class DBHandler:
             return []
 
     def search_by_genre_year(self, genre, year):
+        """Поиск фильмов по жанру и году."""
         query = """
             select f.title, f.description, f.release_year, c.name as genre
             from film f
@@ -58,6 +62,7 @@ class DBHandler:
             return []
 
     def search_year(self, year):
+        """Поиск фильмов по году выпуска."""
         query = """
             select f.title, f.description, f.release_year, c.name as genre
             from film f
@@ -76,6 +81,7 @@ class DBHandler:
             return []
 
     def search_genre(self, genre):
+        """Поиск фильмов по жанру."""
         query = """
             select f.title, f.description, f.release_year, c.name as genre
             from film f
@@ -93,6 +99,7 @@ class DBHandler:
             print("Ошибка запроса search_genre:", e)
             return []
     def get_years(self):
+        """Получение списка доступных лет выпуска фильмов."""
         query = """
             select distinct release_year
             from film
@@ -107,6 +114,7 @@ class DBHandler:
             return []
 
     def get_genres(self):
+        """Получение списка доступных жанров фильмов."""
         query = """
             select distinct name
             from category
@@ -122,6 +130,7 @@ class DBHandler:
 
     # ========= Сохранение в MongoDB =================================================================================
     def save_search_query(self, query_text, query_type):
+        """Сохранение поискового запроса в MongoDB."""
         if self.mongo_collection is None:
             return
         try:
@@ -135,6 +144,7 @@ class DBHandler:
             print("Ошибка сохранения запроса:", e)
 
     def get_popular_queries(self):
+        """Получение популярных поисковых запросов из MongoDB."""
         if self.mongo_collection is None:
             return []
         try:
@@ -149,6 +159,7 @@ class DBHandler:
             return []
 
     def get_top_keywords_mongo(self, limit=10):
+        """Получение топ-10 самых популярных запросов по названию или описанию из MongoDB."""
         if self.mongo_collection is None:
             return []
         try:
@@ -164,6 +175,7 @@ class DBHandler:
             return []
 
     def get_top_genres_years_mongo(self, limit=10):
+        """Получение топ-10 самых популярных запросов по жанру и году из MongoDB."""
         if self.mongo_collection is None:
             return []
         try:
@@ -179,6 +191,7 @@ class DBHandler:
             return []
 
     def close_connection(self):
+        """Закрытие соединений с базами данных."""
         if self.mysql_conn:
             self.mysql_conn.close()
             print("Подключение MySQL закрыто.")

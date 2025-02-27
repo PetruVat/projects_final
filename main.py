@@ -4,6 +4,7 @@ from GUI.display import Application
 
 
 def main():
+    """Инициализация и запуск GUI-приложения."""
     app = wx.App()
     Application()
     app.MainLoop()
